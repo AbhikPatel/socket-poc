@@ -1,0 +1,17 @@
+<div class="d-flex flex-column h-100">
+    <div id="header" class="bg-header d-flex align-items-center px-3">
+        <img src="../../../assets/images/avatar.png" class="profile-img rounded-circle me-3" alt="profile">
+        <h5 class="m-0">Abhishek</h5>
+    </div>
+    <div class="chat-container flex-grow-1 p-4">
+        <div class="d-flex justify-content-start">
+            <div class="chat p-2 rounded-3 bg-white my-2"> Hello </div>
+        </div>
+    </div>
+    <div id="header" class="bg-header d-flex align-items-center">
+        <form class="w-100 px-3 d-flex align-items-center" [formGroup]="chatGroup" (ngSubmit)="onSubmit()">
+            <input type="text" name="message" id="message" placeholder="Type message" class="form-control" formControlName="message">
+            <button class="fs-3 ms-3 text-chat border-0" type="submit"><i class='bx bxs-send'></i></button>
+        </form>
+    </div>
+</div>

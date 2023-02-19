@@ -1,0 +1,19 @@
+<div class="d-flex flex-column border-end h-100">
+    <div id="header" class="bg-header d-flex align-items-center px-3">
+        <img src="../../../assets/images/avatar.png" class="profile-img rounded-circle" alt="profile">
+    </div>
+    <div class="flex-grow-1">
+        <div class="user d-flex align-items-center" role="button" *ngFor="let data of usersData">
+            <div class="px-3 me-1">
+                <img src="../../../assets/images/1rivet.jpg" class="rounded-circle user-img" alt="profile">
+            </div>
+            <div class="py-3 border-bottom flex-grow-1 h-100 flex-column d-flex pe-3">
+                <div class="d-flex justify-content-between">
+                    <span class="fs-5"> {{data}} </span>
+                    <span class="text-chat fs-7"> 8:10 </span>
+                </div>
+                <span class="text-online fw-bolder fs-7"> Online </span>
+            </div>
+        </div>
+    </div>
+</div>
