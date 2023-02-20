@@ -26,6 +26,7 @@ export class LoginComponent implements OnInit {
   }
 
   public onSubmit(){
+    // this._service.getUsers().subscribe((data) => console.log(data))
     this._service.userName.next(this.loginGroup.value.name)
     this._route.navigateByUrl('/chat')
   }

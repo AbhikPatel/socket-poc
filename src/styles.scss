@@ -18,6 +18,10 @@ body{
     font-size: 0.8rem;
 }
 
+.back-btn{
+    display: none;
+}
+
 .bg-theme{
     background-color: #e7e7e7;
 }
@@ -31,7 +35,8 @@ body{
 }
 
 #sidebar{
-    flex: 0 0 400px;
+    flex: 0 0 500px;
+    transition: 0.4s all;
 }
 
 #header{
@@ -64,6 +69,33 @@ body{
     color: #03c603;
 }
 
+.side{
+    transform: translateX(-100%);
+}
+
+::-webkit-scrollbar {
+    width: 4px;
+    height: 2px;
+
+    &-thumb {
+        background-color:#54656f;
+        border-radius: 12px;
+    }
+
+    &-button {
+        visibility: hidden;
+        height: 2px;
+        width: 2px;
+
+        &:vertical:start:increment,
+        &:vertical:end:decrement,
+        &:horizontal:start:increment,
+        &:horizontal:end:decrement {
+            display: none;
+        }
+    }
+}
+
 @media(max-width: 576px){
 
     .login-container{
@@ -78,5 +110,9 @@ body{
         position: absolute;
         width: 100%;
         height: 100%;
+    }
+
+    .back-btn{
+        display: block;
     }
 }

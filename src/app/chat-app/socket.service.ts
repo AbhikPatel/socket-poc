@@ -7,8 +7,8 @@ import { io } from 'socket.io-client';
 })
 export class SocketService {
 
-  socket = io('wss://anonychat.onrender.com')
-  // socket = io('ws://172.16.3.107:21321')
+  // socket = io('wss://anonychat.onrender.com')
+  socket = io('ws://172.16.3.107:21321')
   
   constructor() {
     
