@@ -3,28 +3,32 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 @Component({
   selector: 'app-chat-users',
   templateUrl: './chat-users.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  // changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class ChatUsersComponent implements OnInit {
 
   @Input() public usersData: any;
+  @Input() public name: any;
 
   @Input() public onlineData:any;
   @Output() public emitSide:EventEmitter<boolean>
+  @Output() public emitReceiverId:EventEmitter<string>
 
-  public userId: number;
+  public userId: string;
   constructor() {
-    this.userId = 0;
+    this.userId = '';
     this.emitSide = new EventEmitter();
+    this.emitReceiverId = new EventEmitter();
   }
 
   ngOnInit(): void {
 
   }
 
-  public onUser(id: number) {
+  public onUser(id: string) {
     this.userId = id;
     this.emitSide.emit(true)
+    this.emitReceiverId.emit(id)
   }
 
   public showOnline(name: string) {

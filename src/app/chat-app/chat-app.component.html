@@ -4,12 +4,17 @@
             [usersData]="users"
             [onlineData]="onlineUsers | async"
             (emitSide)="emitSide($event)"
+            (emitReceiverId)="emitReceiverId($event)"
+            [name]="userName"
         ></app-chat-users>
     </div>
     <div class="flex-grow-1">
         <app-chat-messages
             (emitSide)="emitSide($event)"
             (emitMessage)="emitMessage($event)"
+            [chats]="chatData"
+            [senderId]="senderId"
+            [name]="receiverName"
         ></app-chat-messages>
     </div>
 </div>
