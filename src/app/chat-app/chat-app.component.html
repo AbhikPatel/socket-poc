@@ -1,20 +1,14 @@
 <div class="d-flex h-100 position-relative">
-    <div id="sidebar" class="bg-white" [ngClass]="(openSide && media) === true ? 'side' : ''">
+    <div id="sidebar" class="bg-white">
         <app-chat-users 
-            [usersData]="users"
-            [onlineData]="onlineUsers | async"
-            (emitSide)="emitSide($event)"
-            (emitReceiverId)="emitReceiverId($event)"
-            [name]="userName"
+        [users]="allUsersData"
+        [online]="onlineUser"
+        (emitReceiverId)="emitReceiverId($event)"
         ></app-chat-users>
     </div>
     <div class="flex-grow-1">
         <app-chat-messages
-            (emitSide)="emitSide($event)"
             (emitMessage)="emitMessage($event)"
-            [chats]="chatData"
-            [senderId]="senderId"
-            [name]="receiverName"
         ></app-chat-messages>
     </div>
 </div>

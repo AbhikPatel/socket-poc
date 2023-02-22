@@ -31,6 +31,7 @@ export class LoginComponent implements OnInit {
     if (findUser) {
       this._service.userName.next(this.loginGroup.value.name)
       this._route.navigateByUrl('/chat')
+      localStorage.setItem('name', this.loginGroup.value.name)
     }else{
       alert('Invalid User')
     }

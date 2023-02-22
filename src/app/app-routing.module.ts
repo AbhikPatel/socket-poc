@@ -1,5 +1,6 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
+import { LoginGuard } from './core/login.guard';
 import { LoginComponent } from './core/login/login.component';
 
 const routes: Routes = [
@@ -9,7 +10,8 @@ const routes: Routes = [
   },
   {
     path: 'chat',
-    loadChildren: () => import('./chat-app/chat-app.module').then(m => m.ChatAppModule)
+    loadChildren: () => import('./chat-app/chat-app.module').then(m => m.ChatAppModule),
+    canActivate:[LoginGuard]
   },
   {
     path:'',

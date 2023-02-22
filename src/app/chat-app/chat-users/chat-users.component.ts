@@ -7,17 +7,14 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 })
 export class ChatUsersComponent implements OnInit {
 
-  @Input() public usersData: any;
-  @Input() public name: any;
+  @Input() public users: any
+  @Input() public online: any
+  @Output() public emitReceiverId:EventEmitter<string>;
 
-  @Input() public onlineData:any;
-  @Output() public emitSide:EventEmitter<boolean>
-  @Output() public emitReceiverId:EventEmitter<string>
+  public userId: string
 
-  public userId: string;
   constructor() {
     this.userId = '';
-    this.emitSide = new EventEmitter();
     this.emitReceiverId = new EventEmitter();
   }
 
@@ -25,17 +22,16 @@ export class ChatUsersComponent implements OnInit {
 
   }
 
-  public onUser(id: string) {
-    this.userId = id;
-    this.emitSide.emit(true)
-    this.emitReceiverId.emit(id)
+  public showOnline(name: string) {
+    let findName
+    if (name && this.online)
+      findName = this.online.find((user: string) => user === name)
+
+    return findName ? 'Online' : 'Offline'
   }
 
-  public showOnline(name: string) {
-    let test;
-    if (this.onlineData)
-      test = this.onlineData.find((items: any) => items === name)
-
-    return test ? 'Online' : 'Offline'
+  public onUser(user: any) {
+    this.userId = user._id;
+    this.emitReceiverId.emit(user)
   }
 }
