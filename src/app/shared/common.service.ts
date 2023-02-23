@@ -8,7 +8,7 @@ import { BehaviorSubject, Observable } from 'rxjs';
 export class CommonService {
 
   public userName: BehaviorSubject<any>;
-  public api: string = 'http://172.16.3.107:21321/api/v1/users/'
+  public api: string = 'http://172.16.3.107:21321/api/v1/users'
   constructor(
     private _http: HttpClient
   ) {
@@ -20,6 +20,10 @@ export class CommonService {
 
   public getUsers(): Observable<any> {
     return this._http.get<any>(`${this.api}`)
+  }
+
+  public getChatUsers(id:string): Observable<any> {
+    return this._http.get<any>(`${this.api}/${id}`)
   }
 
   public getValidUser(){

@@ -7,19 +7,26 @@ import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output
 })
 export class ChatUsersComponent implements OnInit {
 
-  @Input() public users: any
+  @Input() public set users(v: any) {
+    this._users = v;
+  }
+  public get users(): any {
+    return this._users;
+  }
+
+  @Input() public senderId: any
   @Input() public online: any
-  @Output() public emitReceiverId:EventEmitter<string>;
+  @Output() public emitIds: EventEmitter<any>;
 
   public userId: string
+  private _users: any;
 
   constructor() {
     this.userId = '';
-    this.emitReceiverId = new EventEmitter();
+    this.emitIds = new EventEmitter();
   }
 
   ngOnInit(): void {
-
   }
 
   public showOnline(name: string) {
@@ -30,8 +37,18 @@ export class ChatUsersComponent implements OnInit {
     return findName ? 'Online' : 'Offline'
   }
 
-  public onUser(user: any) {
-    this.userId = user._id;
-    this.emitReceiverId.emit(user)
+  public onUser(id: any, chatId:string) {
+    this.userId = id;
+    let ObjId = {
+      receiver: id,
+      chat:chatId
+    }
+    this.emitIds.emit(ObjId)
+  }
+
+  public showName(data:any){
+    let ownerId = data.owner
+    let owner = data.members.find((items:any) => items._id !== ownerId)
+    return owner.first_name + ' ' + owner.last_name
   }
 }

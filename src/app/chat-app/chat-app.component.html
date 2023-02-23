@@ -2,8 +2,9 @@
     <div id="sidebar" class="bg-white">
         <app-chat-users 
         [users]="allUsersData"
+        [senderId]="senderId"
         [online]="onlineUser"
-        (emitReceiverId)="emitReceiverId($event)"
+        (emitIds)="emitIds($event)"
         ></app-chat-users>
     </div>
     <div class="flex-grow-1">

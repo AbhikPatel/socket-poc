@@ -24,5 +24,7 @@ export class ChatMessagesComponent implements OnInit {
   public onSubmit(){
     if(this.chatGroup.valid)
       this.emitMessage.emit(this.chatGroup.value.message)
+
+    this.chatGroup.reset();
   }
 }

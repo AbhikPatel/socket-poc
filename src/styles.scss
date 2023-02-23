@@ -15,7 +15,7 @@ body{
 }
 
 .fs-7{
-    font-size: 0.8rem;
+    font-size: 0.7rem;
 }
 
 .back-btn{
@@ -93,6 +93,15 @@ body{
         &:horizontal:end:decrement {
             display: none;
         }
+    }
+}
+
+.chat{
+    padding: 0.4rem 3.2rem 0.4rem 0.4rem;
+    max-width: 500px;
+    &-info{
+        right: 3px;
+        bottom: 3px;
     }
 }
 

@@ -14,6 +14,7 @@ export class ChatAppComponent implements OnInit {
   public senderId: string;
   public receiverId: string;
   public time: any;
+  public getIds: any;
 
   constructor(
     private _service: SocketService,
@@ -33,6 +34,13 @@ export class ChatAppComponent implements OnInit {
       this.time = new Date();
     }, 1000)
 
+    this._commmonService.userName.subscribe((data) => {
+      this.userName = data.first_name
+      this.senderId = data._id;
+      this._service.emit('setUserName', data.first_name)
+      this._commmonService.getChatUsers(data._id).subscribe((items) => this.allUsersData = items.data.doc.chats)
+    })
+
     this._service.listen('welcome').subscribe((data) => {
       let obj = {
         userId: this.senderId,
@@ -40,39 +48,26 @@ export class ChatAppComponent implements OnInit {
       }
       this._service.emit('setMapper', obj)
     })
-    this._commmonService.userName.subscribe((data) => {
-      this.userName = data
-      this._service.emit('setUserName', data)
-    })
 
+    this._service.listen('chat').subscribe((data) => console.log(data))
     this._service.listen('alive').subscribe((data) => this.onlineUser = Object.keys(data.users))
-
-    this._commmonService.getUsers().subscribe((data) => this.getAllUsersData(data.data.doc))
-  }
-
-  public getAllUsersData(users: any) {
-    this.allUsersData = users
-    let currentUser = users.find((items: any) => items.first_name === this.userName)
-    this.senderId = currentUser._id
-    let removeId = users.indexOf(currentUser)
-    this.allUsersData.splice(removeId, 1);
   }
 
   public emitMessage(message: string) {
     let obj = {
       is_read: false,
       sender: this.senderId,
-      receiver: this.receiverId,
       time: this.time,
       type: 'text',
       content: {
         text: message
       }
     }
-
+    this._service.emit('chat', Object.assign(obj, this.getIds))
   }
 
-  public emitReceiverId(user: any) {
-    this.receiverId = user._id;
+  public emitIds(object: any) {
+    this.receiverId = object.receiver
+    this.getIds = object
   }
 }

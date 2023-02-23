@@ -29,7 +29,7 @@ export class LoginComponent implements OnInit {
   public onSubmit() {
     let findUser = this.usersData.find((items:any) => items.first_name === this.loginGroup.value.name)
     if (findUser) {
-      this._service.userName.next(this.loginGroup.value.name)
+      this._service.userName.next(findUser)
       this._route.navigateByUrl('/chat')
       localStorage.setItem('name', this.loginGroup.value.name)
     }else{
