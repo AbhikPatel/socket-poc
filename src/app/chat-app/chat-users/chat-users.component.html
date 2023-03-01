@@ -2,7 +2,7 @@
 <div class="d-flex flex-column border-end h-100 overflow-hidden">
     <div id="header" class="bg-header d-flex align-items-center px-3">
         <img src="../../../assets/images/avatar.png" class="profile-img rounded-circle me-2" alt="profile">
-        <h4> Abhishek </h4>
+        <h4> {{name}} </h4>
     </div>
     <div class="flex-grow-1 overflow-auto">
         <div class="bg-white w-100 p-3 border-bottom">
@@ -10,19 +10,19 @@
                 placeholder="Search or start new chat">
         </div>
         <!-- Users Chat  -->
-        <div class="user d-flex align-items-center" role="button" (click)="onUser(data.members[1]._id, data._id)" *ngFor="let data of users"
-            [ngClass]="{'bg-theme' : userId === data.members[1]._id}">
+        <div class="user d-flex align-items-center" role="button" (click)="onUser(data.members[0]._id, data._id, data.members[0].first_name)" *ngFor="let data of users"
+            [ngClass]="{'bg-theme' : userId === data.members[0]._id}">
             <div class="px-3 me-1">
                 <img src="../../../assets/images/1rivet.jpg" class="rounded-circle user-img" alt="profile">
             </div>
             <div class="py-3 border-bottom flex-grow-1 h-100 flex-column d-flex pe-3">
                 <div class="d-flex justify-content-between">
-                    <span class="fs-5"> {{showName(data)}} </span>
+                    <span class="fs-5"> {{data.members[0].first_name + ' ' + data.members[0].last_name}} </span>
                     <span class="text-chat fs-7"> 8:10 </span>
                 </div>
                 <span class="fs-7"
-                    [ngClass]="showOnline(data.members[1].first_name) === 'Online' ? 'text-online fw-bolder' : 'text-chat'">
-                    {{showOnline(data.members[1].first_name)}} </span>
+                    [ngClass]="showOnline(data.members[0].first_name) === 'Online' ? 'text-online fw-bolder' : 'text-chat'">
+                    {{showOnline(data.first_name)}} </span>
             </div>
         </div>
     </div>

@@ -7,8 +7,25 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 })
 export class ChatMessagesComponent implements OnInit {
 
-  chatGroup: FormGroup;
-  @Output() public emitMessage:EventEmitter<string>
+  @Input() public sender: any;
+  @Input() public name: any;
+
+  @Input() public set chats(v: any) {
+    if (v) {
+      this._chats = v;
+      this._chats.map((items: any) => items.is_read = true);
+    }
+  }
+
+  public get chats(): any {
+    return this._chats;
+  }
+  
+  @Output() public emitMessage: EventEmitter<string>
+  
+  private _chats: any;
+  public chatGroup: FormGroup;
+
   constructor(
     private _fb: FormBuilder
   ) {
@@ -21,10 +38,27 @@ export class ChatMessagesComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public onSubmit(){
-    if(this.chatGroup.valid)
+  public onSubmit() {
+    if (this.chatGroup.valid)
       this.emitMessage.emit(this.chatGroup.value.message)
 
     this.chatGroup.reset();
+  }
+
+  public showTime(time: any) {
+    let data = new Date(time)
+    let min = data.getMinutes() % 12;
+    let sec = data.getSeconds() % 12;
+    min = this.addDigits(min)
+    sec = this.addDigits(sec)
+    return min + ':' + sec
+  }
+
+  public addDigits(num:any){
+    if(num.toString().length === 1){
+      return '0' + num
+    }else{
+      return num
+    }
   }
 }

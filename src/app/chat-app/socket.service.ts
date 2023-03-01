@@ -30,7 +30,7 @@ export class SocketService {
     this.socket.emit(eventname, data);
   }
 
-  public getMessages(sender:any, receiver:any):Observable<any>{
-    return this._http.get<any>(`${this.api}?sender=${sender}&receiver=${receiver}`)
+  public getMessages(chatId:string):Observable<any>{
+    return this._http.get<any>(`${this.api}?chat=${chatId}`)
   }
 }

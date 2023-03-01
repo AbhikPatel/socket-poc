@@ -1,5 +1,5 @@
 <!-- Start: Message Container  -->
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column h-100 overflow-hidden">
 
     <!-- Header  -->
     <div id="header" class="bg-header d-flex align-items-center px-3">
@@ -9,16 +9,18 @@
             </span>
             <img src="../../../assets/images/avatar.png" class="profile-img rounded-circle" alt="profile">
         </div>
-        <h5 class="m-0">Abhishek</h5>
+        <h5 class="m-0">{{name}}</h5>
     </div>
 
     <!-- Chat Screen  -->
-    <div class="chat-container flex-grow-1 p-4">
-        <div class="d-flex">
-            <div class="d-flex chat shadow-sm rounded-3 position-relative my-2 bg-chat ">
-                <span>Lorem ipsum dolor, sit amet consectetur adipisicing elit. Pariatur eum obcaecati facere quas, odit
-                    harum, voluptatum reprehenderit esse quos ipsam delectus eius, fugiat modi voluptates.</span>
-                <div class=" chat-info position-absolute fs-7 text-muted"> 5:62 <span class="text-muted">✔️</span>
+    <div class="chat-container flex-grow-1 p-4 overflow-auto">
+        <div class="d-flex" *ngFor="let data of chats" [ngClass]="{ 'justify-content-end' : data.sender === sender}">
+            <div class="d-flex chat shadow-sm rounded-3 position-relative my-2" [ngClass]="data.sender === sender ? 'bg-white' : 'bg-chat'">
+                <span> {{data.content.text}} </span>
+                <div class=" chat-info position-absolute fs-7 text-muted"> {{showTime(data.time)}} 
+                    <ng-container *ngIf="data.sender === sender">
+                        <span class="fw-bolder" [ngClass]="data.is_read ? 'text-read' : 'text-muted' ">✓</span>
+                    </ng-container>
                 </div>
             </div>
         </div>

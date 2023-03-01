@@ -1,15 +1,20 @@
 <div class="d-flex h-100 position-relative">
     <div id="sidebar" class="bg-white">
         <app-chat-users 
-        [users]="allUsersData"
-        [senderId]="senderId"
-        [online]="onlineUser"
-        (emitIds)="emitIds($event)"
+            [users]="allUsersData"
+            [senderId]="senderId"
+            [online]="onlineUser"
+            (emitIds)="emitIds($event)"
+            [name]="userName"
+            (emitReceiverName)="emitReceiverName($event)"
         ></app-chat-users>
     </div>
     <div class="flex-grow-1">
         <app-chat-messages
             (emitMessage)="emitMessage($event)"
+            [chats]="chatsData"
+            [sender]="senderId"
+            [name]="receiverName"
         ></app-chat-messages>
     </div>
 </div>

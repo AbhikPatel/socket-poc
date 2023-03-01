@@ -13,8 +13,10 @@ export class ChatAppComponent implements OnInit {
   public onlineUser: any;
   public senderId: string;
   public receiverId: string;
+  public receiverName: string;
   public time: any;
   public getIds: any;
+  public chatsData: any;
 
   constructor(
     private _service: SocketService,
@@ -23,6 +25,7 @@ export class ChatAppComponent implements OnInit {
     this.userName = '';
     this.senderId = '';
     this.receiverId = '';
+    this.receiverName = '';
   }
 
   ngOnInit(): void {
@@ -38,7 +41,9 @@ export class ChatAppComponent implements OnInit {
       this.userName = data.first_name
       this.senderId = data._id;
       this._service.emit('setUserName', data.first_name)
-      this._commmonService.getChatUsers(data._id).subscribe((items) => this.allUsersData = items.data.doc.chats)
+      this._commmonService.getChatUsers(this.senderId).subscribe((items) => {
+          this.allUsersData = items.data.doc.chats
+      })
     })
 
     this._service.listen('welcome').subscribe((data) => {
@@ -49,8 +54,15 @@ export class ChatAppComponent implements OnInit {
       this._service.emit('setMapper', obj)
     })
 
-    this._service.listen('chat').subscribe((data) => console.log(data))
-    this._service.listen('alive').subscribe((data) => this.onlineUser = Object.keys(data.users))
+    this._service.listen('chat').subscribe((data) => {
+      this.chatsData.push(data)
+      console.log(data);
+      debugger
+    })
+    this._service.listen('alive').subscribe((data) => {
+      this.onlineUser = Object.keys(data.users)
+      // console.log(data);
+    })
   }
 
   public emitMessage(message: string) {
@@ -64,10 +76,16 @@ export class ChatAppComponent implements OnInit {
       }
     }
     this._service.emit('chat', Object.assign(obj, this.getIds))
+    this.chatsData.push(Object.assign(obj, this.getIds))
   }
 
   public emitIds(object: any) {
-    this.receiverId = object.receiver
-    this.getIds = object
+    this.receiverId = object.receiver;
+    this.getIds = object;
+    this._service.getMessages(object.chat).subscribe((data) => this.chatsData = data.data.doc);
+  }
+
+  public emitReceiverName(name: string){
+    this.receiverName = name
   }
 }
