@@ -1,34 +1,41 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { BehaviorSubject, Observable } from 'rxjs';
+import { BehaviorSubject, map, Observable, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
 
-  public userName: BehaviorSubject<any>;
   public api: string = 'http://172.16.3.107:21321/api/v1/users'
+  public loader:Subject<boolean>
+
   constructor(
     private _http: HttpClient
   ) {
-    this.userName = new BehaviorSubject('');
-    let user = localStorage.getItem('name')
-    if (user)
-      this.userName.next(user)
+    this.loader = new Subject();
   }
 
   public getUsers(): Observable<any> {
-    return this._http.get<any>(`${this.api}`)
+    return this._http.get<any>(`${this.api}`).pipe(
+      map((res:any) => res.data.doc)
+    )
   }
 
   public getChatUsers(id:string): Observable<any> {
-    return this._http.get<any>(`${this.api}/${id}`)
+    return this._http.get<any>(`${this.api}/${id}`).pipe(
+      map((res:any) => res.data.doc.chats)
+    )
   }
 
-  public getValidUser(){
-    let user;
-    this.userName.subscribe((data) => user = data)
-    return user ? true : false
+  public postLogin(credentials:any):Observable<any>{
+    return this._http.post<any>(`${this.api}/log-in`, credentials).pipe(
+      map((res:any) => res)
+    )
+  }
+
+  public isLoggedIn(): boolean{
+    let token = localStorage.getItem('token')
+    return token ? true: false;
   }
 }

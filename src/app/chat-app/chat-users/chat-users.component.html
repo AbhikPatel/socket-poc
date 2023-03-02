@@ -4,12 +4,15 @@
         <img src="../../../assets/images/avatar.png" class="profile-img rounded-circle me-2" alt="profile">
         <h4> {{name}} </h4>
     </div>
-    <div class="flex-grow-1 overflow-auto">
-        <div class="bg-white w-100 p-3 border-bottom">
+    <!-- Users Chat  -->
+    <div class="flex-grow-1 overflow-auto position-relative">
+        <div id="user-chat" class="position-absolute">
+            
+        </div>
+        <!-- <div class="bg-white w-100 p-3 border-bottom">
             <input type="text" name="search" id="search" class="form-control bg-header border-0"
                 placeholder="Search or start new chat">
-        </div>
-        <!-- Users Chat  -->
+        </div> -->
         <div class="user d-flex align-items-center" role="button" (click)="onUser(data.members[0]._id, data._id, data.members[0].first_name)" *ngFor="let data of users"
             [ngClass]="{'bg-theme' : userId === data.members[0]._id}">
             <div class="px-3 me-1">

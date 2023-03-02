@@ -9,7 +9,8 @@ import { SocketService } from './socket.service';
 export class ChatAppComponent implements OnInit {
 
   public userName: string;
-  public allUsersData: any;
+  public onlyChatUsers: any;
+  public allUsers: any;
   public onlineUser: any;
   public senderId: string;
   public receiverId: string;
@@ -37,14 +38,13 @@ export class ChatAppComponent implements OnInit {
       this.time = new Date();
     }, 1000)
 
-    this._commmonService.userName.subscribe((data) => {
-      this.userName = data.first_name
-      this.senderId = data._id;
-      this._service.emit('setUserName', data.first_name)
-      this._commmonService.getChatUsers(this.senderId).subscribe((items) => {
-          this.allUsersData = items.data.doc.chats
-      })
-    })
+    let stringData: any = localStorage.getItem('user')
+    let user = JSON.parse(stringData)
+    this.userName = user.first_name
+    this.senderId = user._id
+    this._service.emit('setUserName', this.userName)
+    this._commmonService.getChatUsers(this.senderId).subscribe((items) => this.onlyChatUsers = items)
+
 
     this._service.listen('welcome').subscribe((data) => {
       let obj = {
@@ -57,7 +57,6 @@ export class ChatAppComponent implements OnInit {
     this._service.listen('chat').subscribe((data) => {
       this.chatsData.push(data)
       console.log(data);
-      debugger
     })
     this._service.listen('alive').subscribe((data) => {
       this.onlineUser = Object.keys(data.users)
@@ -85,7 +84,7 @@ export class ChatAppComponent implements OnInit {
     this._service.getMessages(object.chat).subscribe((data) => this.chatsData = data.data.doc);
   }
 
-  public emitReceiverName(name: string){
+  public emitReceiverName(name: string) {
     this.receiverName = name
   }
 }

@@ -1,7 +1,7 @@
 <div class="d-flex h-100 position-relative">
     <div id="sidebar" class="bg-white">
         <app-chat-users 
-            [users]="allUsersData"
+            [users]="onlyChatUsers"
             [senderId]="senderId"
             [online]="onlineUser"
             (emitIds)="emitIds($event)"
