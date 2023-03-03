@@ -1,19 +1,32 @@
 <!-- Start: User chat sidebar  -->
 <div class="d-flex flex-column border-end h-100 overflow-hidden">
     <div id="header" class="bg-header d-flex align-items-center px-3">
-        <img src="../../../assets/images/avatar.png" class="profile-img rounded-circle me-2" alt="profile">
-        <h4> {{name}} </h4>
+        <label for="toggle" class="d-flex align-items-center" role="button">
+            <img src="../../../assets/images/avatar.png" class="profile-img rounded-circle me-2" alt="profile">
+            <h4> {{name}} </h4>
+        </label>
     </div>
+    <input type="checkbox" class="d-none" name="toggle" id="toggle" #toggle>
     <!-- Users Chat  -->
-    <div class="flex-grow-1 overflow-auto position-relative">
-        <div id="user-chat" class="position-absolute">
-            
+    <div class="user-container flex-grow-1 overflow-auto position-relative">
+        <div id="user-chat" class="position-absolute bg-white">
+            <div class="bg-white w-100 p-3 border-bottom">
+                <input type="text" name="search" id="search" class="form-control bg-header border-0"
+                    placeholder="Search or start new chat" [(ngModel)]="searchText">
+            </div>
+            <div class="user d-flex align-items-center" role="button" (click)="addUser(data)"  *ngFor="let data of getAllUsers | search:searchText">
+                <div class="px-3 me-1">
+                    <img src="../../../assets/images/1rivet.jpg" class="rounded-circle user-img" alt="profile">
+                </div>
+                <div class="py-3 border-bottom flex-grow-1 h-100 flex-column d-flex pe-3">
+                    <div class="d-flex justify-content-between">
+                        <span class="fs-5"> {{data.first_name + ' ' + data.last_name}} </span>
+                    </div>
+                </div>
+            </div>
         </div>
-        <!-- <div class="bg-white w-100 p-3 border-bottom">
-            <input type="text" name="search" id="search" class="form-control bg-header border-0"
-                placeholder="Search or start new chat">
-        </div> -->
-        <div class="user d-flex align-items-center" role="button" (click)="onUser(data.members[0]._id, data._id, data.members[0].first_name)" *ngFor="let data of users"
+        <div class="user d-flex align-items-center" role="button"
+            (click)="onUser(data.members[0]._id, data._id, data.members[0].first_name)" *ngFor="let data of users"
             [ngClass]="{'bg-theme' : userId === data.members[0]._id}">
             <div class="px-3 me-1">
                 <img src="../../../assets/images/1rivet.jpg" class="rounded-circle user-img" alt="profile">
@@ -27,6 +40,9 @@
                     [ngClass]="showOnline(data.members[0].first_name) === 'Online' ? 'text-online fw-bolder' : 'text-chat'">
                     {{showOnline(data.first_name)}} </span>
             </div>
+        </div>
+        <div class="d-flex justify-content-center h-100 align-items-center" *ngIf="users?.length === 0">
+            <span class="text-chat"> No Conversion started with anyone </span>
         </div>
     </div>
 </div>

@@ -11,11 +11,11 @@ const routes: Routes = [
   {
     path: 'chat',
     loadChildren: () => import('./chat-app/chat-app.module').then(m => m.ChatAppModule),
-    canActivate:[LoginGuard]
+    // canActivate:[LoginGuard]
   },
   {
     path:'',
-    redirectTo:'login',
+    redirectTo:'chat',
     pathMatch:'full'
   }
 ];

@@ -43,20 +43,21 @@ export class ChatMessagesComponent implements OnInit {
       this.emitMessage.emit(this.chatGroup.value.message)
 
     this.chatGroup.reset();
+      
   }
 
   public showTime(time: any) {
-    let data = new Date(time)
+    let data = new Date(time);
     let min = data.getMinutes() % 12;
     let sec = data.getSeconds() % 12;
-    min = this.addDigits(min)
-    sec = this.addDigits(sec)
-    return min + ':' + sec
+    min = this.addDigits(min);
+    sec = this.addDigits(sec);
+    return min + ':' + sec;
   }
 
   public addDigits(num:any){
     if(num.toString().length === 1){
-      return '0' + num
+      return '0' + num;
     }else{
       return num
     }

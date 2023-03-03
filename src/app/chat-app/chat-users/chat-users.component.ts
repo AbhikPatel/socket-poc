@@ -1,4 +1,5 @@
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { FormBuilder } from '@angular/forms';
 
 @Component({
   selector: 'app-chat-users',
@@ -16,18 +17,25 @@ export class ChatUsersComponent implements OnInit {
   }
 
   @Input() public senderId: any
+  @Input() public getAllUsers: any;
   @Input() public name: string;
   @Input() public online: any
   @Output() public emitIds: EventEmitter<any>;
   @Output() public emitReceiverName: EventEmitter<string>;
+  @Output() public emitNewMode: EventEmitter<boolean>;
 
   public userId: string
   private _users: any;
+  public searchText: any = '';
 
-  constructor() {
+  @ViewChild('toggle') public toggle: any
+  constructor(
+    private _fb: FormBuilder
+  ) {
     this.userId = '';
     this.emitIds = new EventEmitter();
     this.emitReceiverName = new EventEmitter();
+    this.emitNewMode = new EventEmitter();
     this.name = ''
   }
 
@@ -44,7 +52,7 @@ export class ChatUsersComponent implements OnInit {
     return findName ? 'Online' : 'Offline'
   }
 
-  public onUser(id: any, chatId: string, name:string) {
+  public onUser(id: any, chatId: string, name: string) {
     this.userId = id;
     let ObjId = {
       receiver: id,
@@ -62,5 +70,26 @@ export class ChatUsersComponent implements OnInit {
     })
     this._users = data;
     this.onUser(this._users[0].members[0]._id, this._users[0]._id, this._users[0].members[0].first_name)
+  }
+
+  public addUser(user: any) {
+    let isUserThere = this.users.find((items: any) => items.members[0].first_name === user.first_name)
+    if (isUserThere) {
+      this.onUser(user._id, isUserThere._id, user.first_name)
+    } else {
+      let data = {
+        members: [
+          {
+            first_name: user.first_name,
+            last_name: user.last_name,
+          }
+        ]
+      }
+      this._users.push(data);
+      this.emitReceiverName.emit(user.first_name);
+      this.emitNewMode.emit(true)
+      this.onUser(user._id, '', user.first_name)
+    }
+    this.toggle.nativeElement.checked = false;
   }
 }

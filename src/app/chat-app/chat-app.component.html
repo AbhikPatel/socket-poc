@@ -1,4 +1,4 @@
-<div class="d-flex h-100 position-relative">
+<div class="d-flex h-100 user-select-none">
     <div id="sidebar" class="bg-white">
         <app-chat-users 
             [users]="onlyChatUsers"
@@ -7,6 +7,8 @@
             (emitIds)="emitIds($event)"
             [name]="userName"
             (emitReceiverName)="emitReceiverName($event)"
+            [getAllUsers]="allUsers"
+            (emitNewMode)="emitNewMode($event)"
         ></app-chat-users>
     </div>
     <div class="flex-grow-1">
