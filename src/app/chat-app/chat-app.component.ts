@@ -1,6 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Subject } from 'rxjs';
-import { CommonService } from '../shared/common.service';
 import { SocketService } from './socket.service';
 
 @Component({
@@ -9,30 +7,30 @@ import { SocketService } from './socket.service';
 })
 export class ChatAppComponent implements OnInit {
 
-  public users: any;
-  public media: boolean;
   public userName: string;
-  public senderId: any;
+  public onlyChatUsers: any;
+  public allUsers: any;
+  public onlineUser: any;
+  public senderId: string;
   public receiverId: string;
-  public openSide: boolean;
+  public receiverName: string;
   public time: any;
-  public onlineUsers: Subject<any>;
-  public chatData: any;
-  public receiverName: any;
+  public getIds: any;
+  public chatsData: any;
+  public newMode: boolean;
 
   constructor(
     private _service: SocketService,
-    private _commonService: CommonService
   ) {
     this.userName = '';
+    this.senderId = '';
     this.receiverId = '';
-    this.onlineUsers = new Subject();
-    this.openSide = false;
-    this.media = false;
+    this.receiverName = '';
+    this.newMode = false;
   }
 
   ngOnInit(): void {
-    this.props();
+    this.props()
   }
 
   public props() {
@@ -40,75 +38,92 @@ export class ChatAppComponent implements OnInit {
       this.time = new Date();
     }, 1000)
 
-    this._commonService.getUsers().subscribe((items) => {
-      this.users = items.data.doc
-      let findUser = this.users.find((user: any) => user.first_name === this.userName)
-      this.senderId = findUser._id
-      let id = this.users.indexOf(findUser)
-      this.users.splice(id, 1)
-    })
+    let stringData: any = localStorage.getItem('user')
+    let user = JSON.parse(stringData)
+    this.userName = user.first_name
+    this.senderId = user._id
+    this._service.emit('setUserName', this.userName)
+    this._service.getChatUsers(this.senderId).subscribe((items) => this.onlyChatUsers = items)
 
+
+    this._service.getUsers().subscribe((data) => this.allUsers = data.filter((items: any) => items.first_name !== this.userName))
     this._service.listen('welcome').subscribe((data) => {
       let obj = {
-        userId:this.senderId,
-        socketId:data.id
+        userId: this.senderId,
+        socketId: data.id
       }
       this._service.emit('setMapper', obj)
     })
 
-    if (window.innerWidth < 568)
-      this.media = true
-
-    this._commonService.userName.subscribe((data) => {
-      this.userName = data
-      this._service.emit('setUserName', data)
+    this._service.listen('chat').subscribe((data) => {
+      this.chatsData.push(data)
+      console.log(data);
     })
-    this._service.listen('connect_error').subscribe((data) => console.log(data))
-    this._service.listen('alive').subscribe((data) => this.onlineUsers.next(Object.keys(data.users)))
-
-    this._service.listen('chat').subscribe((data) => console.log(data))
+    this._service.listen('alive').subscribe((data) => this.onlineUser = Object.keys(data.users))
   }
 
-  public emitSide(open: boolean) {
-    this.openSide = open
-  }
-
-  public emitMessage(message: any) {
-    let data = {
-      is_read: false,
-      sender: this.senderId,
-      receiver: this.receiverId,
-      time: this.time,
-      type: 'text',
-      content: {
-        text: message
+  public emitMessage(message: string) {
+    if (this.newMode) {
+      let postData = {
+        owner: this.senderId,
+        chat_type: 'dm',
+        title: 'dm',
+        members: [
+          this.senderId,
+          this.receiverId
+        ]
       }
+      this.chatsData = [];
+      this._service.postChat(postData).subscribe((data) => {
+        this.getIds.chat = data
+        let obj = {
+          is_read: false,
+          sender: this.senderId,
+          time: this.time,
+          type: 'text',
+          content: {
+            text: message
+          }
+        }
+
+        this._service.emit('chat', Object.assign(obj, this.getIds))
+        this.chatsData.push(Object.assign(obj, this.getIds))
+      })
+      this.newMode = false
+    } else {
+
+      let obj = {
+        is_read: false,
+        sender: this.senderId,
+        time: this.time,
+        type: 'text',
+        content: {
+          text: message
+        }
+      }
+
+      this._service.emit('chat', Object.assign(obj, this.getIds))
+      this.chatsData.push(Object.assign(obj, this.getIds))
+      console.log(Object.assign(obj, this.getIds));
     }
 
-    this._service.emit('chat', data)
-    this.chatData.push(data);
   }
 
-  public emitReceiverId(id: string) {
-    this.receiverId = id;
-    this._service.getMessages(this.senderId, id).subscribe((data) => {
-      let sender = data.data.doc
-      this._service.getMessages(id, this.senderId).subscribe((data) => {
-        this.chatData = sender.concat(data.data.doc)
-      })
-    })
-    let data = this.users.find((items: any) => items._id === this.receiverId)
-    this.receiverName = data.first_name
+  public emitIds(object: any) {
+    this.receiverId = object.receiver;
+    if (object.chat !== '') {
+      this.getIds = object;
+      this._service.getMessages(object.chat).subscribe((data) => this.chatsData = data.data.doc);
+    } else {
+      this.chatsData = [];
+    }
+  }
+
+  public emitReceiverName(name: string) {
+    this.receiverName = name
+  }
+
+  public emitNewMode(mode: boolean) {
+    this.newMode = mode
   }
 }
-
-// let data = {
-//   is_read: false,
-//   sender: this.senderId,
-//   receiver: this.receiverId,
-//   time: this.time,
-//   type: 'text',
-//   content: {
-//     text: message
-//   }
-// }

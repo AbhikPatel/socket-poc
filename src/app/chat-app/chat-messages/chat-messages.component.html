@@ -1,9 +1,9 @@
 <!-- Start: Message Container  -->
-<div class="d-flex flex-column h-100">
+<div class="d-flex flex-column h-100 overflow-hidden">
 
     <!-- Header  -->
     <div id="header" class="bg-header d-flex align-items-center px-3">
-        <div class="d-flex align-items-center me-2" (click)="onBack()" role="button">
+        <div class="d-flex align-items-center me-2" role="button">
             <span class="back-btn text-chat">
                 <i class='bx bx-left-arrow-alt fs-1 me-1'></i>
             </span>
@@ -13,9 +13,16 @@
     </div>
 
     <!-- Chat Screen  -->
-    <div class="chat-container flex-grow-1 p-4">
-        <div class="d-flex" *ngFor="let data of chats" [ngClass]="senderId === data.sender ? 'justify-content-end' : 'justify-content-start'">
-            <div class="chat p-2 rounded-3 my-2" [ngClass]="senderId === data.sender ? 'bg-chat' : 'bg-white'"> {{data.content.text}} </div>
+    <div class="chat-container flex-grow-1 p-4 overflow-auto">
+        <div class="d-flex" *ngFor="let data of chats" [ngClass]="{ 'justify-content-end' : data.sender === sender}">
+            <div class="d-flex chat shadow-sm rounded-3 position-relative my-2" [ngClass]="data.sender === sender ? 'bg-white' : 'bg-chat'">
+                <span> {{data.content.text}} </span>
+                <div class=" chat-info position-absolute fs-7 text-muted"> {{showTime(data.time)}} 
+                    <ng-container *ngIf="data.sender === sender">
+                        <span class="fw-bolder" [ngClass]="data.is_read ? 'text-read' : 'text-muted' ">✓</span>
+                    </ng-container>
+                </div>
+            </div>
         </div>
     </div>
 
