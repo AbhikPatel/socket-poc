@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { Subject } from 'rxjs';
 import { SocketService } from './socket.service';
 
 @Component({
@@ -18,7 +19,8 @@ export class ChatAppComponent implements OnInit {
   public getIds: any;
   public chatsData: any;
   public newMode: boolean;
-
+  public typeData: Subject<boolean>;
+  
   constructor(
     private _service: SocketService,
   ) {
@@ -27,6 +29,7 @@ export class ChatAppComponent implements OnInit {
     this.receiverId = '';
     this.receiverName = '';
     this.newMode = false;
+    this.typeData = new Subject();
   }
 
   ngOnInit(): void {
@@ -34,6 +37,8 @@ export class ChatAppComponent implements OnInit {
   }
 
   public props() {
+
+    this._service.emit('onhello', 'Yo sup?')
     setInterval(() => {
       this.time = new Date();
     }, 1000)
@@ -55,11 +60,21 @@ export class ChatAppComponent implements OnInit {
       this._service.emit('setMapper', obj)
     })
 
-    this._service.listen('chat').subscribe((data) => {
-      this.chatsData.push(data)
+    this._service.listen('chat').subscribe((data) => this.chatsData.push(data))
+    this._service.listen('alive').subscribe((data) => {
+      this.onlineUser = Object.keys(data.users)
       console.log(data);
+
     })
-    this._service.listen('alive').subscribe((data) => this.onlineUser = Object.keys(data.users))
+    this._service.listen('typing').subscribe((id) => {
+      let findUser = this.allUsers.find((user:any) => user._id === id)
+      if(findUser.first_name === this.receiverName){
+       this.typeData.next(true)
+        setTimeout(() => {
+            this.typeData.next(false)
+        }, 2000);
+      }
+    })
   }
 
   public emitMessage(message: string) {
@@ -104,7 +119,6 @@ export class ChatAppComponent implements OnInit {
 
       this._service.emit('chat', Object.assign(obj, this.getIds))
       this.chatsData.push(Object.assign(obj, this.getIds))
-      console.log(Object.assign(obj, this.getIds));
     }
 
   }
@@ -125,5 +139,9 @@ export class ChatAppComponent implements OnInit {
 
   public emitNewMode(mode: boolean) {
     this.newMode = mode
+  }
+
+  public emitOnTyping(data:any){
+    this._service.emit('typing', this.senderId)
   }
 }

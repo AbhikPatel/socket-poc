@@ -42,16 +42,6 @@ export class ChatUsersComponent implements OnInit {
   ngOnInit(): void {
   }
 
-  public showOnline(name: string) {
-    let findName
-    if (name && this.online)
-      findName = this.online.find((user: string) => user === name)
-
-    // console.log(name, findName);
-
-    return findName ? 'Online' : 'Offline'
-  }
-
   public onUser(id: any, chatId: string, name: string) {
     this.userId = id;
     let ObjId = {
