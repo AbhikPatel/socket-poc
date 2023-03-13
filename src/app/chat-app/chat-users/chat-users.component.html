@@ -36,9 +36,9 @@
                     <span class="fs-5"> {{data.members[0].first_name + ' ' + data.members[0].last_name}} </span>
                     <span class="text-chat fs-7"> 8:10 </span>
                 </div>
-                <span class="fs-7"
-                    [ngClass]="showOnline(data.members[0].first_name) === 'Online' ? 'text-online fw-bolder' : 'text-chat'">
-                    {{showOnline(data.first_name)}} </span>
+                <div class="d-flex justify-content-between">
+                    <span class="fs-7"> Offline </span>
+                </div>
             </div>
         </div>
         <div class="d-flex justify-content-center h-100 align-items-center" *ngIf="users?.length === 0">

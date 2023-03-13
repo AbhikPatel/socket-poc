@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -9,6 +9,8 @@ export class ChatMessagesComponent implements OnInit {
 
   @Input() public sender: any;
   @Input() public name: any;
+  @Input() public showTyping:any
+
 
   @Input() public set chats(v: any) {
     if (v) {
@@ -20,11 +22,15 @@ export class ChatMessagesComponent implements OnInit {
   public get chats(): any {
     return this._chats;
   }
-  
+
   @Output() public emitMessage: EventEmitter<string>
-  
+  @Output() public emitOnTyping: EventEmitter<any>
+
+  private _typer: any;
   private _chats: any;
   public chatGroup: FormGroup;
+
+  @ViewChild('goToBottom') public content!: ElementRef;
 
   constructor(
     private _fb: FormBuilder
@@ -33,9 +39,20 @@ export class ChatMessagesComponent implements OnInit {
       message: ['', [Validators.required]]
     })
     this.emitMessage = new EventEmitter();
+    this.emitOnTyping = new EventEmitter();
+    this.showTyping = false
+  }
+
+  public ngAfterViewChecked() {
+    this.scrollToBottom();
+  }
+
+  public scrollToBottom(): void {
+    this.content.nativeElement.scrollTop = this.content.nativeElement.scrollHeight;
   }
 
   ngOnInit(): void {
+    this.chatGroup.valueChanges.subscribe(() => this.emitOnTyping.emit('Typing'))
   }
 
   public onSubmit() {
@@ -43,7 +60,6 @@ export class ChatMessagesComponent implements OnInit {
       this.emitMessage.emit(this.chatGroup.value.message)
 
     this.chatGroup.reset();
-      
   }
 
   public showTime(time: any) {
@@ -55,10 +71,10 @@ export class ChatMessagesComponent implements OnInit {
     return min + ':' + sec;
   }
 
-  public addDigits(num:any){
-    if(num.toString().length === 1){
+  public addDigits(num: any) {
+    if (num.toString().length === 1) {
       return '0' + num;
-    }else{
+    } else {
       return num
     }
   }

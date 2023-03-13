@@ -137,6 +137,15 @@ body {
     }
 }
 
+#typer{
+    left: 20px;
+    z-index: -1;
+}
+
+.translate-up{
+    transform: translateY(30px);
+}
+
 @media(max-width: 576px) {
 
     .login-container {

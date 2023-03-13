@@ -17,6 +17,8 @@
             [chats]="chatsData"
             [sender]="senderId"
             [name]="receiverName"
+            (emitOnTyping)="emitOnTyping($event)"
+            [showTyping]="typeData | async"
         ></app-chat-messages>
     </div>
 </div>
