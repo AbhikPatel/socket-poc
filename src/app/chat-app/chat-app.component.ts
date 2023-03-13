@@ -20,7 +20,7 @@ export class ChatAppComponent implements OnInit {
   public chatsData: any;
   public newMode: boolean;
   public typeData: Subject<boolean>;
-  
+
   constructor(
     private _service: SocketService,
   ) {
@@ -37,8 +37,6 @@ export class ChatAppComponent implements OnInit {
   }
 
   public props() {
-
-    this._service.emit('onhello', 'Yo sup?')
     setInterval(() => {
       this.time = new Date();
     }, 1000)
@@ -60,18 +58,21 @@ export class ChatAppComponent implements OnInit {
       this._service.emit('setMapper', obj)
     })
 
-    this._service.listen('chat').subscribe((data) => this.chatsData.push(data))
-    this._service.listen('alive').subscribe((data) => {
-      this.onlineUser = Object.keys(data.users)
-      console.log(data);
-
+    this._service.listen('chat').subscribe((data) => {
+      if (data.senderId === this.receiverId)
+        this.chatsData.push(data)
     })
+    // this._service.listen('alive').subscribe((data) => {
+    //   this.onlineUser = Object.keys(data.users)
+    //   console.log(data);
+
+    // })
     this._service.listen('typing').subscribe((id) => {
-      let findUser = this.allUsers.find((user:any) => user._id === id)
-      if(findUser.first_name === this.receiverName){
-       this.typeData.next(true)
+      let findUser = this.allUsers.find((user: any) => user._id === id)
+      if (findUser.first_name === this.receiverName) {
+        this.typeData.next(true)
         setTimeout(() => {
-            this.typeData.next(false)
+          this.typeData.next(false)
         }, 2000);
       }
     })
@@ -116,7 +117,6 @@ export class ChatAppComponent implements OnInit {
           text: message
         }
       }
-
       this._service.emit('chat', Object.assign(obj, this.getIds))
       this.chatsData.push(Object.assign(obj, this.getIds))
     }
@@ -141,7 +141,7 @@ export class ChatAppComponent implements OnInit {
     this.newMode = mode
   }
 
-  public emitOnTyping(data:any){
+  public emitOnTyping(data: any) {
     this._service.emit('typing', this.senderId)
   }
 }

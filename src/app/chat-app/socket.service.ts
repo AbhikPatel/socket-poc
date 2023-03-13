@@ -2,20 +2,22 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { io } from 'socket.io-client';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SocketService {
 
-  // socket = io('wss://anonychat.onrender.com')
-  socket = io('ws://172.16.3.107:21321');
+  socket = io('wss://anonychat.onrender.com')
+  // socket = io('ws://172.16.3.107:21321');
   public getId:any;
-  public api:string = 'http://172.16.3.107:21321/api/v1'
+  public api:string;
 
   constructor(
     private _http:HttpClient
   ) {
+    this.api = environment.baseURL
   }
   
   listen(eventname: string): Observable<any> {
