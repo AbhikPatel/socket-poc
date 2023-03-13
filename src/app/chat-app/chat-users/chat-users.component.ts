@@ -1,5 +1,4 @@
-import { ChangeDetectionStrategy, Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { ChangeDetectionStrategy, Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 
 @Component({
   selector: 'app-chat-users',
@@ -30,7 +29,6 @@ export class ChatUsersComponent implements OnInit {
 
   @ViewChild('toggle') public toggle: any
   constructor(
-    private _fb: FormBuilder
   ) {
     this.userId = '';
     this.emitIds = new EventEmitter();
